@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Web.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Ecommerce.Web.Data
 {
@@ -15,7 +16,8 @@ namespace Ecommerce.Web.Data
         {
             modelBuilder.Entity<Category>()
                 .Property(c => c.CreatedTime)
-                .HasDefaultValueSql("GETDATE()");
-        }
-    }
+                .HasDefaultValueSql("GETDATE()")
+                .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+		}
+	}
 }
