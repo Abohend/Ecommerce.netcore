@@ -33,7 +33,9 @@ namespace Ecommerce.Web.Controllers
             {
                 _context.Categories.Add(category);
 				_context.SaveChanges();
-				return RedirectToAction("Index");
+                TempData["toast"] = "Category has been created sucessfully";
+                TempData["toastType"] = "success";
+                return RedirectToAction("Index");
             }
             return View(category);
         }
@@ -51,7 +53,9 @@ namespace Ecommerce.Web.Controllers
 			{
 				_context.Update(category);
 				_context.SaveChanges();
-				return RedirectToAction("Index");
+                TempData["toast"] = "Category has been updated sucessfully";
+                TempData["toastType"] = "info";
+                return RedirectToAction("Index");
 			}
 			return View(category);
 		}
@@ -66,7 +70,9 @@ namespace Ecommerce.Web.Controllers
 		{
 			_context.Remove(category);
 			_context.SaveChanges();
-			return RedirectToAction("Index");
+            TempData["toast"] = "Category has been deleted sucessfully";
+            TempData["toastType"] = "danger";
+            return RedirectToAction("Index");
 		}
 	}
 }
