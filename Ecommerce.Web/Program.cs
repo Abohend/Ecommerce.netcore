@@ -1,4 +1,6 @@
-using Ecommerce.Web.Data;
+using Ecommerce.DataAccess.Data;
+using Ecommerce.DataAccess.Implementations;
+using Ecommerce.Entities.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Web
@@ -13,6 +15,8 @@ namespace Ecommerce.Web
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<Context>(options => 
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
 

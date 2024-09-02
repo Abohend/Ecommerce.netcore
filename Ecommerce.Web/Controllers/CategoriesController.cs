@@ -1,22 +1,22 @@
-﻿using Ecommerce.Web.Data;
-using Ecommerce.Web.Models;
+﻿using Ecommerce.Entities.Models;
+using Ecommerce.Entities.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Web.Controllers
 {
     public class CategoriesController : Controller
     {
-        private readonly Context _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoriesController(Context context)
+        public CategoriesController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            this._unitOfWork = unitOfWork;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var categories = _context.Categories.ToList();
+            var categories = _unitOfWork.Category.GetAll();
             return View(categories);
         }
 
@@ -31,8 +31,8 @@ namespace Ecommerce.Web.Controllers
 		{
             if (ModelState.IsValid)
             {
-                _context.Categories.Add(category);
-				_context.SaveChanges();
+                _unitOfWork.Category.Add(category);
+                _unitOfWork.Complete();
                 TempData["toast"] = "Category has been created sucessfully";
                 TempData["toastType"] = "success";
                 return RedirectToAction("Index");
@@ -43,7 +43,7 @@ namespace Ecommerce.Web.Controllers
 		[HttpGet]
         public IActionResult Edit(int id)
         {
-            return View(_context.Categories.Find(id));
+            return View(_unitOfWork.Category.GetOne(c => c.Id == id));
 		}
 
         [HttpPost]
@@ -51,8 +51,8 @@ namespace Ecommerce.Web.Controllers
         {
             if (ModelState.IsValid)
 			{
-				_context.Update(category);
-				_context.SaveChanges();
+				_unitOfWork.Category.Update(category);
+                _unitOfWork.Complete();
                 TempData["toast"] = "Category has been updated sucessfully";
                 TempData["toastType"] = "info";
                 return RedirectToAction("Index");
@@ -63,13 +63,13 @@ namespace Ecommerce.Web.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
 		{
-			return View(_context.Categories.Find(id));
+			return View(_unitOfWork.Category.GetOne(c => c.Id == id));
 		}
         [HttpPost]
 		public IActionResult Delete(Category category)
 		{
-			_context.Remove(category);
-			_context.SaveChanges();
+            _unitOfWork.Category.Remove(category);
+            _unitOfWork.Complete();
             TempData["toast"] = "Category has been deleted sucessfully";
             TempData["toastType"] = "danger";
             return RedirectToAction("Index");

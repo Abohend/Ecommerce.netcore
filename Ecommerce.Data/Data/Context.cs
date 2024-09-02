@@ -1,8 +1,8 @@
-﻿using Ecommerce.Web.Models;
+﻿using Ecommerce.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Ecommerce.Web.Data
+namespace Ecommerce.DataAccess.Data
 {
     public class Context: DbContext
     {
