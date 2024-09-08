@@ -37,7 +37,7 @@ namespace Ecommerce.Web
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Categories}/{action=Index}/{id?}");
+                pattern: "{area=Admin}/{controller=Categories}/{action=Index}/{id?}");
 
             app.Run();
         }

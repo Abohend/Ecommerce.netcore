@@ -2,15 +2,16 @@
 using Ecommerce.Entities.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ecommerce.Web.Controllers
+namespace Ecommerce.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoriesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
 
         public CategoriesController(IUnitOfWork unitOfWork)
         {
-            this._unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -28,7 +29,7 @@ namespace Ecommerce.Web.Controllers
 
         [HttpPost]
         public IActionResult Create(Category category)
-		{
+        {
             if (ModelState.IsValid)
             {
                 _unitOfWork.Category.Add(category);
@@ -40,39 +41,39 @@ namespace Ecommerce.Web.Controllers
             return View(category);
         }
 
-		[HttpGet]
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             return View(_unitOfWork.Category.GetOne(c => c.Id == id));
-		}
+        }
 
         [HttpPost]
         public IActionResult Edit(Category category)
         {
             if (ModelState.IsValid)
-			{
-				_unitOfWork.Category.Update(category);
+            {
+                _unitOfWork.Category.Update(category);
                 _unitOfWork.Complete();
                 TempData["toast"] = "Category has been updated sucessfully";
                 TempData["toastType"] = "info";
                 return RedirectToAction("Index");
-			}
-			return View(category);
-		}
+            }
+            return View(category);
+        }
 
         [HttpGet]
         public IActionResult Delete(int id)
-		{
-			return View(_unitOfWork.Category.GetOne(c => c.Id == id));
-		}
+        {
+            return View(_unitOfWork.Category.GetOne(c => c.Id == id));
+        }
         [HttpPost]
-		public IActionResult Delete(Category category)
-		{
+        public IActionResult Delete(Category category)
+        {
             _unitOfWork.Category.Remove(category);
             _unitOfWork.Complete();
             TempData["toast"] = "Category has been deleted sucessfully";
             TempData["toastType"] = "danger";
             return RedirectToAction("Index");
-		}
-	}
+        }
+    }
 }
