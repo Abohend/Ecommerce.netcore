@@ -2,3 +2,4 @@
 bin/ 
 obj/ 
 material-dashboard-master/
+/Ecommerce.Web/wwwroot/products
