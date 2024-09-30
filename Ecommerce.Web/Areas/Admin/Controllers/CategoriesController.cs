@@ -27,7 +27,7 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Create(Category category)
         {
             if (ModelState.IsValid)
@@ -47,7 +47,7 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
             return View(_unitOfWork.Category.GetOne(c => c.Id == id));
         }
 
-        [HttpPost]
+        [ValidateAntiForgeryToken, HttpPost]
         public IActionResult Edit(Category category)
         {
             if (ModelState.IsValid)
@@ -66,7 +66,8 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
         {
             return View(_unitOfWork.Category.GetOne(c => c.Id == id));
         }
-        [HttpPost]
+
+        [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Delete(Category category)
         {
             _unitOfWork.Category.Remove(category);

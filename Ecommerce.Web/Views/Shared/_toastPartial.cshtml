@@ -21,6 +21,13 @@
             </div>
         </div>
     </div>
+    <script>
+        setTimeout(function () {
+            $('#successToast').fadeOut(500, function() { // 500 milliseconds is the duration of the fade-out effect
+                $(this).remove(); // This removes the element from the DOM after the fade-out effect is completed
+                });
+         }, 1500);
+    </script>
 }
 
 else if (toastType == "info")
@@ -41,6 +48,13 @@ else if (toastType == "info")
             </div>
         </div>
     </div>
+    <script>
+        setTimeout(function() {
+            $('#successToast').fadeOut(500, function() { // 500 milliseconds is the duration of the fade-out effect
+                $(this).remove(); // This removes the element from the DOM after the fade-out effect is completed
+            });
+        }, 1500);
+    </script>
 }
 
 else if (toastType == "warning")
@@ -61,6 +75,13 @@ else if (toastType == "warning")
             </div>
         </div>
     </div>
+    <script>
+        setTimeout(function() {
+            $('#successToast').fadeOut(500, function() { // 500 milliseconds is the duration of the fade-out effect
+                $(this).remove(); // This removes the element from the DOM after the fade-out effect is completed
+            });
+        }, 1500);
+    </script>
 }
 
 else if (toastType == "danger")
@@ -81,4 +102,11 @@ else if (toastType == "danger")
             </div>
         </div>
     </div>
+    <script>
+        setTimeout(function() {
+            $('#successToast').fadeOut(500, function() { // 500 milliseconds is the duration of the fade-out effect
+                $(this).remove(); // This removes the element from the DOM after the fade-out effect is completed
+            });
+        }, 1500);
+    </script>
 }

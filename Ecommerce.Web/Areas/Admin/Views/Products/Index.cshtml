@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.PageTitle = "View Products";
+    ViewBag.CardTitle = "Products";
+}
+
+@if (TempData["toast"] != null)
+{
+    await Html.RenderPartialAsync("../Shared/_toastPartial");
+}
+
+<div class="card my-4 mx-4">
+    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+            <h6 class="text-white text-capitalize ps-3">@ViewBag.CardTitle table</h6>
+        </div>
+    </div>
+    <div class="card-body px-0 pb-2">
+        <div class="table-responsive p-5">
+            <table id ="table" class="table align-items-center mb-0 w-90">
+                <thead>
+                    <tr>
+                        <th >Name</th>
+                        <th >Description</th>
+                        <th class="text-start">Price</th>
+                        <th >Category</th>
+                        <th >Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Create" class="mx-4 btn btn-primary">New</a>
+
+@section Scripts {
+    <script src="~/js/product.js"></script>
+}
