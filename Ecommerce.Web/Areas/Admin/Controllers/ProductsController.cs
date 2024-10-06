@@ -2,12 +2,15 @@
 using Ecommerce.Entities.Repositories;
 using Ecommerce.Entities.ViewModels;
 using Ecommerce.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Utilities;
 
 namespace Ecommerce.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = CustomRoles.admin)]
     public class ProductsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

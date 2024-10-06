@@ -1,10 +1,13 @@
 ﻿using Ecommerce.Entities.Models;
 using Ecommerce.Entities.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Utilities;
 
 namespace Ecommerce.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = CustomRoles.admin)]
     public class CategoriesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

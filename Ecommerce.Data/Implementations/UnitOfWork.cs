@@ -1,5 +1,4 @@
 ﻿using Ecommerce.DataAccess.Data;
-using Ecommerce.Entities.Models;
 using Ecommerce.Entities.Repositories;
 namespace Ecommerce.DataAccess.Implementations
 {

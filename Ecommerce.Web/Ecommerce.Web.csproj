@@ -40,7 +40,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ecommerce.Data\Ecommerce.DataAccess.csproj" />
+    <ProjectReference Include="..\Ecommerce.DataAccess\Ecommerce.DataAccess.csproj" />
+    <ProjectReference Include="..\Ecommerce.Data\Ecommerce.Data.csproj" />
+    <ProjectReference Include="..\Ecommerce.Data\Ecommerce.DataِAccess.csproj" />
+    <ProjectReference Include="..\Ecommerce.Entitties\Ecommerce.Entities.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
 </Project>

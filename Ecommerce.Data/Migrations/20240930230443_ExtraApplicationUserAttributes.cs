@@ -5,13 +5,13 @@
 namespace Ecommerce.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedExtraUserAttributes : Migration
+    public partial class ExtraApplicationUserAttributes : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Adress",
+                name: "Address",
                 table: "Users",
                 type: "nvarchar(max)",
                 nullable: true);
@@ -28,7 +28,7 @@ namespace Ecommerce.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Adress",
+                name: "Address",
                 table: "Users");
 
             migrationBuilder.DropColumn(

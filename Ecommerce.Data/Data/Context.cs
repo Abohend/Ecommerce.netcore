@@ -26,9 +26,9 @@ namespace Ecommerce.DataAccess.Data
                 .HasNoKey();
 
             modelBuilder.Entity<IdentityUserRole<string>>()
-                .HasNoKey();
+                .HasKey(e => new { e.RoleId, e.UserId });
 
-            modelBuilder.Entity< IdentityUserToken<string>>()
+            modelBuilder.Entity<IdentityUserToken<string>>()
                 .HasNoKey();
         }
 	}
