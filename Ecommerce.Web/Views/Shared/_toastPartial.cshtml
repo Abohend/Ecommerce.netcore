@@ -1,4 +1,6 @@
-﻿@{
+﻿@* assign the toast message in TempData["toast"], and the toast type in TempData["toastType"]*@
+
+@{
     string toastType = (TempData["toastType"] == null)? "" : TempData["toastType"]!.ToString()??"";
 }
 

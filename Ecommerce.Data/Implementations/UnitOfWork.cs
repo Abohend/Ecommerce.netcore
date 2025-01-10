@@ -1,4 +1,5 @@
 ﻿using Ecommerce.DataAccess.Data;
+using Ecommerce.DataِAccess.Implementations;
 using Ecommerce.Entities.Repositories;
 namespace Ecommerce.DataAccess.Implementations
 {
@@ -7,13 +8,14 @@ namespace Ecommerce.DataAccess.Implementations
         private readonly Context _context;
 
         public ICategoryRepository Category { get; private set; }
-
         public IProductRepository Product { get; }
+        public IShoppingCartReposiotry ShoppingCart { get; }
 
         public UnitOfWork(Context context)
         {
             this.Category = new CategoryRepository(context);
             this.Product = new ProductRepository(context);
+            this.ShoppingCart = new ShoppingCartRepository(context);
             this._context = context;
         }
 

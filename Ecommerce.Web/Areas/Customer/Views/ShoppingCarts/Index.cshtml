@@ -1,0 +1,128 @@
+﻿@model IEnumerable<ShoppingCart>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        
+        <div class="row g-4 justify-content-end align-items-center">
+            <div class="col-8">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Products</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Handle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr id=@item.ProductId>
+                                    <th scope="row">
+                                        <div class="d-flex align-items-center">
+                                            <img src="~/@item.Product!.Image" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="product image">
+                                        </div>
+                                    </th>
+                                    <td>
+                                        <p class="mb-0 mt-4">@item.Product!.Name</p>
+                                    </td>
+                                    <td>
+                                        <p class="mb-0 mt-4">@item.Product!.Price $</p>
+                                    </td>
+                                    <td>
+                                        <div class="input-group quantity mt-4" style="width: 100px;">
+                                            <form asp-controller="ShoppingCarts" asp-action="Decrement" asp-route-productId="@item.ProductId" data-ajax="true" data-ajax-method="Post" data-ajax-success="OnDecrement(@item.ProductId, @item.Product!.Price)">
+                                                <div class="input-group-btn">
+                                                    <button type="submit" class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                        <i class="fa fa-minus"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                            <input id=@("product"+item.ProductId+"Amount") type="text" class="form-control form-control-sm text-center border-0" value="@item.Amount">
+                                            <form asp-controller="ShoppingCarts" asp-action="Increment" asp-route-productId="@item.ProductId" data-ajax="true" data-ajax-method="Post">
+                                                <div class="input-group-btn">
+                                                    <button type="submit" onclick="OnIncrement(@item.ProductId, @item.Product.Price)" class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p id=@("product"+item.ProductId+"Total") class="mb-0 mt-4">@(item.Product.Price * item.Amount)$</p>
+                                    </td>
+                                    <td>
+                                        <form asp-controller="ShoppingCarts" asp-action="Remove" asp-route-productId="@item.ProductId" data-ajax="true" data-ajax-method="Delete" onsubmit="RemoveBtn(@item.ProductId, @item.Amount, @item.Product!.Price)">
+                                            <button type="submit" class="btn btn-md rounded-circle bg-light border mt-4">
+                                                <i class="fa fa-times text-danger"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+                <div class="bg-light rounded">
+                    <div class="py-4 mb-4 border-bottom d-flex justify-content-between">
+                        <h5 class="mb-0 ps-4 me-4">Total</h5>
+                        <p id="total" class="mb-0 pe-4">$ @ViewBag.Total</p>
+                    </div>
+                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function RemoveBtn(id, amount, price) {
+            $('#' + id).remove();
+            $('#cartCount').text(parseInt($('#cartCount').text()) - amount);
+            var total = parseFloat($('#total').text().replace('$ ',''));
+            $('#total').text(total - amount * price);
+        }
+        function OnIncrement(id, price) {
+            var cartCount = parseInt($("#cartCount").text());
+            $("#cartCount").text(cartCount + 1);
+            var elementId = "#product" + id + "Amount";
+            var productAmount = parseInt($(elementId).val());
+            $(elementId).val(productAmount + 1);
+            $("#product"+id+"Total").text((productAmount + 1) * price);
+            var total = parseFloat($('#total').text().replace('$ ',''));
+            $('#total').text((total + price) + " $");
+        };
+        function OnDecrement(id, price) {
+            var cartCount = parseInt($("#cartCount").text());
+            var elementId = "#product" + id + "Amount";
+            var productAmount = parseInt($(elementId).val());
+            if (productAmount <= 1) {
+                RemoveBtn(id, 1, price);
+            }
+            else {
+                $(elementId).val(productAmount - 1);
+                if (cartCount <= 1) {
+                    $("#cartCount").text(0);
+                }
+                else {
+                    $("#cartCount").text(cartCount - 1);
+                }
+                $("#product" + id + "Total").text((productAmount - 1) * price + " $");
+                var total = parseFloat($('#total').text().replace('$ ', ''));
+                $('#total').text((total - price) + " $");
+            }
+            
+        }
+    </script>
+
+}

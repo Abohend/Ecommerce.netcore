@@ -3,4 +3,6 @@ bin/
 obj/ 
 material-dashboard-master/
 /Ecommerce.Web/wwwroot/products
+/Ecommerce.Web/wwwroot/profile-images
+/Ecommerce.Web/wwwroot/pdf
 customar theme/

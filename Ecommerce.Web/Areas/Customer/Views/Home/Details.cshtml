@@ -7,12 +7,12 @@
 <div class="container-fluid py-5 mt-5">
     <div class="container py-5">
         <div class="row g-4 mb-5">
-            <div class="col-lg-11 col-xl-12">
+            <div class="col-lg-6 col-xl-7">
                 <div class="row g-4">
                     <div class="col-lg-6">
                         <div class="border rounded">
                             <a href="#">
-                                <img src="~/@Model.Image" class="img-fluid rounded" alt="Image">
+                                <img style="width: -webkit-fill-available" src="~/@Model.Image" class="img-fluid rounded" alt="Image">
                             </a>
                         </div>
                     </div>
@@ -28,23 +28,72 @@
                             <i class="fa fa-star"></i>
                         </div>
                         <p class="mb-4">@Model.Description</p>
+
                         <div class="input-group quantity mb-5" style="width: 100px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
+                            <form asp-controller="ShoppingCarts" asp-action="Decrement" asp-route-productId="@Model.Id" data-ajax="true" data-ajax-method="Post">
+                                <div class="input-group-btn">
+                                    <button type="submit" onclick="OnDecrement()" class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </form>
+                            <input id="productAmount" type="text" class="form-control form-control-sm text-center border-0" value="@ViewBag.Amount">
+                            <form asp-controller="ShoppingCarts" asp-action="Increment" asp-route-productId="@Model.Id" data-ajax="true" data-ajax-method="Post">
+                                <div class="input-group-btn">
+                                    <button type="submit" onclick="OnIncrement()" class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+
+                        <form asp-controller="ShoppingCarts" asp-action="Increment" asp-route-productId="@Model.Id" data-ajax="true" data-ajax-method="Post">
+                            <button type="submit" onclick="OnCartAdd()" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                <i class="fa fa-shopping-bag me-2 text-primary"></i>
+                                Add to cart
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        // when click the button with id = "btnInc" increase the cartCount by 1 using ajax
+
+        function OnIncrement() {
+            var cartCount = parseInt($("#cartCount").text());
+            $("#cartCount").text(cartCount + 1);
+            var productAmount = parseInt($("#productAmount").val());
+            $("#productAmount").val(productAmount + 1);
+        };
+        function OnDecrement() {
+            var cartCount = parseInt($("#cartCount").text());
+            if (cartCount <= 1) {
+                $("#cartCount").text(0);
+            }
+            else
+            {
+                $("#cartCount").text(cartCount - 1);
+            }
+            var productAmount = parseInt($("#productAmount").val());
+            $("#productAmount").val(productAmount - 1);
+        }
+        function OnCartAdd() {
+            Toastify({
+                text: "Product added to cart successfully.",
+                duration: 3000,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                style: {
+                    background: "linear-gradient(to right, #ffb524, #81c408)",
+                }
+            }).showToast();
+            var cartCount = parseInt($("#cartCount").text());
+            $("#cartCount").text(cartCount + 1);
+        };
+    </script>
+}

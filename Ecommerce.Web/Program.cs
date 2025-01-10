@@ -101,7 +101,7 @@ namespace Ecommerce.Web
             //    pattern: "{area=Admin}/{controller=Products}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
-                name: "Customar",
+                name: "Customer",
                 pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
             app.MapRazorPages();
