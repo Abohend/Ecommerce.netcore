@@ -2,8 +2,7 @@
 
 namespace Ecommerce.Entities.Repositories
 {
-    public interface IShoppingCartReposiotry : IGenericRepository<ShoppingCartItem>
+    public interface IOrderRepository : IGenericRepository<Order>
     {
-
     }
 }

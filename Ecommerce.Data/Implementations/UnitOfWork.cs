@@ -10,12 +10,14 @@ namespace Ecommerce.DataAccess.Implementations
         public ICategoryRepository Category { get; private set; }
         public IProductRepository Product { get; }
         public IShoppingCartReposiotry ShoppingCart { get; }
+        public IOrderRepository Order { get; }
 
         public UnitOfWork(Context context)
         {
             this.Category = new CategoryRepository(context);
             this.Product = new ProductRepository(context);
             this.ShoppingCart = new ShoppingCartRepository(context);
+            this.Order = new OrderRepository(context);
             this._context = context;
         }
 

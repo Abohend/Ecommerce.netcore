@@ -5,9 +5,9 @@ using Ecommerce.Entities.Repositories;
 
 namespace Ecommerce.DataِAccess.Implementations
 {
-    internal class ShoppingCartRepository : GenericRepository<ShoppingCartItem>, IShoppingCartReposiotry
+    internal class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
-        public ShoppingCartRepository(Context context) : base(context)
+        public OrderRepository(Context context) : base(context)
         {
         }
     }

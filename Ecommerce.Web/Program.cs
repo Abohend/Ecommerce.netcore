@@ -1,5 +1,4 @@
 using Ecommerce.Entities.Repositories;
-using Ecommerce.Web.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Utilities;
@@ -7,6 +6,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Ecommerce.Entities.Models;
 using Ecommerce.DataAccess.Data;
 using Ecommerce.DataAccess.Implementations;
+using Stripe;
+using FileService = Ecommerce.Web.Services.FileService;
 
 namespace Ecommerce.Web
 {
@@ -21,6 +22,7 @@ namespace Ecommerce.Web
             builder.Services.AddRazorPages();
             builder.Services.AddDbContext<Context>(options => 
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(opt =>
             {
@@ -93,6 +95,8 @@ namespace Ecommerce.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
             app.UseAuthorization();
 

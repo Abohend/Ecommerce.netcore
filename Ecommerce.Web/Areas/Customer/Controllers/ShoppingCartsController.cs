@@ -2,6 +2,11 @@
 using Ecommerce.Entities.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.BillingPortal;
+using Stripe.Checkout;
+using SessionCreateOptions = Stripe.Checkout.SessionCreateOptions;
+using SessionService = Stripe.Checkout.SessionService;
+using Session = Stripe.Checkout.Session;
 using System.Security.Claims;
 using Utilities;
 
@@ -45,7 +50,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             }
             else
             {
-                _unitOfWork.ShoppingCart.Add(new ShoppingCart
+                _unitOfWork.ShoppingCart.Add(new ShoppingCartItem
                 {
                     Amount = 1,
                     ProductId = productId,
@@ -85,6 +90,89 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                 _unitOfWork.ShoppingCart.Remove(shoppingCart);
                 _unitOfWork.Complete();
             }
+        }
+        [HttpGet]
+        public IActionResult Checkout()
+        {
+            var order = new Order();
+            order.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            order.ShoppingCartItems = _unitOfWork.ShoppingCart.GetAll(x => x.UserId == order.UserId, includeEntities: "Product");
+            order.Total = order.ShoppingCartItems.Sum(p => p.Amount * p.Product!.Price);
+            return View(order);
+        }
+        [HttpPost]
+        public IActionResult Checkout(Order order)
+        {
+            order.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            order.ShoppingCartItems = _unitOfWork.ShoppingCart.GetAll(x => x.UserId == order.UserId, includeEntities: "Product");
+            order.Total = order.ShoppingCartItems.Sum(p => p.Amount * p.Product!.Price);
+            if (!ModelState.IsValid)
+            {
+                return View(order);
+            }
+            order.OrderDate = DateTime.Now;
+            order.OrderStatus = Status.Pending;
+            order.PaymentStatus = Status.Pending;
+
+            _unitOfWork.Order.Add(order);
+            _unitOfWork.Complete();
+      
+            var domain = "https://localhost:44324/";
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+                SuccessUrl = domain + $"Customer/ShoppingCarts/CheckoutSuccess?orderId={order.Id}",
+                CancelUrl = domain + $"Customer/ShoppingCarts/index",
+            };
+
+            foreach (var item in order.ShoppingCartItems!)
+            {
+                var sessionLineOption = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(item.Product!.Price * 100),
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Product.Name
+                        }
+                    },
+                    Quantity = item.Amount
+                };
+                options.LineItems.Add(sessionLineOption);
+            }
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+            order.SessionId = session.Id;
+            order.PaymentIntentId = session.PaymentIntentId;
+
+            _unitOfWork.Order.Update(order);
+            _unitOfWork.Complete();
+
+            Response.Headers.Append("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+
+        public IActionResult CheckoutSuccess(int orderId)
+        {
+            var order = _unitOfWork.Order.GetOne(x => x.Id == orderId, "ShoppingCartItems");
+            var session = new SessionService().Get(order!.SessionId);
+            if (session.PaymentStatus.ToLower() == "paid")
+            {
+                order.OrderStatus = Status.Approved;
+                order.PaymentStatus = Status.Approved;
+                _unitOfWork.Order.Update(order);
+                _unitOfWork.Complete();
+            }
+            order.OrderStatus = Status.Approved;
+            order.PaymentStatus = Status.Approved;
+            _unitOfWork.Order.Update(order);
+            _unitOfWork.ShoppingCart.RemoveRange(order.ShoppingCartItems!);
+            _unitOfWork.Complete();
+            return View(orderId);
         }
     }
 }
