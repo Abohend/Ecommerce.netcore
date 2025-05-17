@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.PageTitle = "View Orders";
+    ViewBag.CardTitle = "Orders";
+}
+<div class="card my-4 mx-4">
+    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+            <h6 class="text-white text-capitalize ps-3">@ViewBag.CardTitle table</h6>
+        </div>
+    </div>
+    <div class="card-body px-0 pb-2">
+        <div class="table-responsive p-5">
+            <table id="table" class="table align-items-center mb-0 w-90">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>UserName</th>
+                        <th class="text-start">Phone</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Create" class="mx-4 btn btn-primary">New</a>
+
+@section Scripts {
+    <script src="~/js/order.js"></script>
+}

@@ -2,13 +2,13 @@
 using Ecommerce.Entities.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Stripe.BillingPortal;
 using Stripe.Checkout;
 using SessionCreateOptions = Stripe.Checkout.SessionCreateOptions;
 using SessionService = Stripe.Checkout.SessionService;
 using Session = Stripe.Checkout.Session;
 using System.Security.Claims;
 using Utilities;
+using Ecommerce.Entities.ViewModels;
 
 namespace Ecommerce.Web.Areas.Customer.Controllers
 {
@@ -22,6 +22,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
         {
             this._unitOfWork = unitOfWork;
         }
+
         public IActionResult Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -29,6 +30,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             ViewBag.Total = shoppingCarts.Sum(p => p.Amount * p.Product!.Price);
             return View(shoppingCarts);
         }
+
         [HttpGet]
         public IActionResult GetCartCount()
         {
@@ -37,6 +39,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             var cartCount = carts.Sum(p => p.Amount);
             return Json(cartCount);
         }
+
         [HttpPost]
         public IActionResult Increment(int productId)
         {
@@ -60,6 +63,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             _unitOfWork.Complete();
             return Json(new { success = true , message = "Product added to cart successfully." });
         }
+        
         [HttpPost]
         public void Decrement(int productId)
         {
@@ -79,6 +83,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             }
             
         }
+        
         [HttpPost]
         public void Remove(int productId)
         {
@@ -91,32 +96,55 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                 _unitOfWork.Complete();
             }
         }
+        
         [HttpGet]
         public IActionResult Checkout()
         {
-            var order = new Order();
-            order.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-            order.ShoppingCartItems = _unitOfWork.ShoppingCart.GetAll(x => x.UserId == order.UserId, includeEntities: "Product");
-            order.Total = order.ShoppingCartItems.Sum(p => p.Amount * p.Product!.Price);
-            return View(order);
+            var checkoutVM = new CheckoutVM();
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            checkoutVM.ShoppingCartItems = _unitOfWork.ShoppingCart.GetAll(x => x.UserId == userId, includeEntities: "Product");
+            
+            checkoutVM.Total= checkoutVM.ShoppingCartItems.Sum(p => p.Amount * p.Product!.Price);
+            
+            return View(checkoutVM);
         }
+        
         [HttpPost]
-        public IActionResult Checkout(Order order)
+        public IActionResult Checkout(CheckoutVM checkoutVM)
         {
-            order.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-            order.ShoppingCartItems = _unitOfWork.ShoppingCart.GetAll(x => x.UserId == order.UserId, includeEntities: "Product");
-            order.Total = order.ShoppingCartItems.Sum(p => p.Amount * p.Product!.Price);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            checkoutVM.ShoppingCartItems = _unitOfWork.ShoppingCart.GetAll(x => x.UserId == userId, includeEntities: "Product");
+            checkoutVM.Total = checkoutVM.ShoppingCartItems.Sum(p => p.Amount * p.Product!.Price);
+            
             if (!ModelState.IsValid)
             {
-                return View(order);
+                return View(checkoutVM);
             }
-            order.OrderDate = DateTime.Now;
-            order.OrderStatus = Status.Pending;
-            order.PaymentStatus = Status.Pending;
+
+            var order = new Order()
+            {
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!,
+                OrderDate = DateTime.Now,
+                OrderStatus = Status.Pending,
+                PaymentStatus = Status.Pending,
+                Total = checkoutVM.Total,
+                UserName = checkoutVM.Name,
+                Address = checkoutVM.Address,
+                City = checkoutVM.City,
+                Phone = checkoutVM.Phone,
+                OrderItems = checkoutVM.ShoppingCartItems.Select(i => new OrderItem
+                {
+                    ProductId = i.ProductId,
+                    Product = i.Product,
+                    Price = i.Product!.Price,
+                    Amount = i.Amount
+                }).ToList()
+            };
 
             _unitOfWork.Order.Add(order);
             _unitOfWork.Complete();
-      
+
             var domain = "https://localhost:44324/";
             var options = new SessionCreateOptions
             {
@@ -126,7 +154,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
                 CancelUrl = domain + $"Customer/ShoppingCarts/index",
             };
 
-            foreach (var item in order.ShoppingCartItems!)
+            foreach (var item in order.OrderItems!)
             {
                 var sessionLineOption = new SessionLineItemOptions
                 {
@@ -146,6 +174,7 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
 
             var service = new SessionService();
             Session session = service.Create(options);
+            
             order.SessionId = session.Id;
             order.PaymentIntentId = session.PaymentIntentId;
 
@@ -158,21 +187,19 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
 
         public IActionResult CheckoutSuccess(int orderId)
         {
-            var order = _unitOfWork.Order.GetOne(x => x.Id == orderId, "ShoppingCartItems");
+            var order = _unitOfWork.Order.GetOne(x => x.Id == orderId, "OrderItems");
             var session = new SessionService().Get(order!.SessionId);
             if (session.PaymentStatus.ToLower() == "paid")
             {
                 order.OrderStatus = Status.Approved;
                 order.PaymentStatus = Status.Approved;
-                _unitOfWork.Order.Update(order);
-                _unitOfWork.Complete();
+                order.PaymentIntentId = session.PaymentIntentId;
             }
-            order.OrderStatus = Status.Approved;
-            order.PaymentStatus = Status.Approved;
-            _unitOfWork.Order.Update(order);
-            _unitOfWork.ShoppingCart.RemoveRange(order.ShoppingCartItems!);
+            var shoppingCartItems = _unitOfWork.ShoppingCart.GetAll(x => x.UserId == order.UserId, includeEntities: "Product");
+            _unitOfWork.ShoppingCart.RemoveRange(shoppingCartItems);
             _unitOfWork.Complete();
             return View(orderId);
         }
+        
     }
 }

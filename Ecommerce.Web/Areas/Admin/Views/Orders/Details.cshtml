@@ -1,0 +1,139 @@
+﻿@using Utilities;
+
+@model Order
+
+@{
+    ViewBag.PageTitle = "Details";
+}
+
+<form method="post">
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card my-4 mx-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Order Details</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                            @* <div asp-validation-summary="All" class="text-danger"></div> *@
+                            <input type="hidden" asp-for="@Model.Id" />
+                            <input type="hidden" asp-for="@Model.UserId" />
+                            <input type="hidden" asp-for="@Model.OrderStatus" />
+                            <input type="hidden" asp-for="@Model.Total" />
+                            <div class="form-group m-3">
+                                <label asp-for="@Model.UserName" class="control-label">Name</label>
+                                <input asp-for="@Model.UserName" class="form-control border px-3" />
+                                <span asp-validation-for="@Model.UserName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group m-3">
+                                <label asp-for="@Model.Phone" class="control-label"></label>
+                                <input asp-for="@Model.Phone" class="form-control border px-3" />
+                                <span asp-validation-for="@Model.Phone" class="text-danger"></span>
+                            </div>
+                            <div class="form-group m-3">
+                                <label asp-for="@Model.City" class="control-label"></label>
+                                <input asp-for="@Model.City" class="form-control border px-3" />
+                                <span asp-validation-for="@Model.City" class="text-danger"></span>
+                            </div>
+                            <div class="form-group m-3">
+                                <label asp-for="@Model.Address" class="control-label"></label>
+                                <input asp-for="@Model.Address" class="form-control border px-3" />
+                                <span asp-validation-for="@Model.Address" class="text-danger"></span>
+                            </div>
+                            <div class="form-group m-3">
+                                <label asp-for="@Model.PaymentStatus" class="control-label">Payment Status</label>
+                                <input readonly asp-for="@Model.PaymentStatus" class="bg-gray-200 form-control border px-3" />
+                                <span asp-validation-for="@Model.PaymentStatus" class="text-danger"></span>
+                            </div>
+                            <div class="form-group m-3">
+                                <label asp-for="@Model.SessionId" class="control-label">Session Id</label>
+                                <input readonly asp-for="@Model.SessionId" class="bg-gray-200 form-control border px-3" />
+                                <span asp-validation-for="@Model.SessionId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group m-3">
+                                <label asp-for="@Model.PaymentIntentId" class="control-label">Payment intent Id</label>
+                                <input readonly asp-for="@Model.PaymentIntentId" class="bg-gray-200 form-control border px-3" />
+                                <span asp-validation-for="@Model.PaymentIntentId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group m-3">
+                                <label asp-for="@Model.OrderDate" class="control-label">Order Date</label>
+                                <input readonly value="@Model.OrderDate.ToShortDateString()" class="form-control border px-3 bg-gray-200" />
+                                <span asp-validation-for="@Model.OrderDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group m-3">
+                                <label asp-for="@Model.Carrier" class="control-label"></label>
+                                <input value="@Model.Carrier" asp-for="@Model.Carrier" class="form-control border px-3 " />
+                                <span asp-validation-for="@Model.Carrier" class="text-danger"></span>
+                            </div>
+                            <div class="form-group m-3">
+                                <label asp-for="@Model.TrackingNumber" class="control-label">Tracking Number</label>
+                                <input value="@Model.TrackingNumber" asp-for="@Model.TrackingNumber" class="form-control border px-3 " />
+                                <span asp-validation-for="@Model.TrackingNumber" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mx-3">
+                                <input type="submit" asp-action="UpdateOrderDetails" value="Update Pickup Details" class="btn btn-primary" />
+                            </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card my-4 mx-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Order Summary</h6>
+                    </div>
+                    <div class="row">
+                        <div class="form-group m-3">
+                            <input type="button" class="btn btn-outline-danger" value="Order Status: @Model.OrderStatus">
+                        </div>
+                        <ul class="list-group list-group-flush list-unstyled mx-3 mb-4">
+                            @foreach (var item in Model.OrderItems!)
+                            {
+                                <li>
+                                    <div class="row container">
+                                        <div class="col-8">
+                                            <h6 class="my-0 text-primary">@item?.Product?.Name</h6>
+                                            <small class="text-muted ms-2">Price : @((item!.Product!.Price).ToString("c")) </small><br />
+                                            <small class="text-muted ms-2">Quantity : @item?.Amount</small>
+                                        </div>
+                                        <div class="col-4 text-success text-bold">
+                                            <p>@((item!.Product!.Price * item.Amount).ToString("c"))</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                            
+                        </ul>
+                        <h5 class="text-center bg-success border-radius-lg text-white p-2 w-90 mx-auto">Total: @Model.Total.ToString("c")</h5>
+                        @if (Model.OrderStatus == Status.Approved)
+                        {
+                            <input type="submit" asp-action="ProcessOrder" value="Start Processing" class="btn btn-info w-auto mx-auto" />
+                        }
+                        @if (Model.OrderStatus == Status.Processing)
+                        {
+                            <input type="submit" asp-action="ShipOrder" value="Start Shipping" class="btn btn-success w-auto mx-auto" />
+                        }
+                        @if (Model.OrderStatus != Status.Cancelled || Model.PaymentStatus != Status.Refunded)
+                        {
+                            <input type="submit" asp-action="CancelOrder" value="Cancel" class="btn btn-danger w-auto mx-auto" />
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+<a asp-action="Index" class="mx-4 btn btn-success">Back to list</a>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

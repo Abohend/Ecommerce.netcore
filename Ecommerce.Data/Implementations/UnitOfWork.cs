@@ -11,6 +11,7 @@ namespace Ecommerce.DataAccess.Implementations
         public IProductRepository Product { get; }
         public IShoppingCartReposiotry ShoppingCart { get; }
         public IOrderRepository Order { get; }
+        public IOrderItemRepository OrderItem { get; }
 
         public UnitOfWork(Context context)
         {
@@ -18,6 +19,7 @@ namespace Ecommerce.DataAccess.Implementations
             this.Product = new ProductRepository(context);
             this.ShoppingCart = new ShoppingCartRepository(context);
             this.Order = new OrderRepository(context);
+            this.OrderItem = new OrderItemRepository(context);
             this._context = context;
         }
 

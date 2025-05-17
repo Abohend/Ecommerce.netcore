@@ -6,6 +6,7 @@
         IProductRepository Product { get; }
         IShoppingCartReposiotry ShoppingCart { get; }
         IOrderRepository Order { get; }
+        IOrderItemRepository OrderItem { get; }
         int Complete();
     }
 }

@@ -4,6 +4,7 @@ using Ecommerce.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce.DataAccess.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20250404153145_AddShpippingAttributesToOrder")]
+    partial class AddShpippingAttributesToOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,76 +82,6 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "e04c3582-8b0b-488a-bf42-59adbe0a5928",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "8702ecb2-915e-4436-be24-b5a7b46b0bc4",
-                            Email = "mhmdabohend@gmail.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            Name = "Mohamed Abohend",
-                            NormalizedEmail = "MHMDABOHEND@GMAIL.COM",
-                            NormalizedUserName = "MHMDABOHEND@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ5OIWbQ6QgcMMuf+S0iqRDulTboVoBdwFjIJ0J5iOviRhjKgu7jHdCUu1MxaUgqcg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "e24c48f5-7a62-4ad5-96df-d1802e6ee131",
-                            TwoFactorEnabled = false,
-                            UserName = "mhmdabohend@gmail.com"
-                        },
-                        new
-                        {
-                            Id = "bbc1210d-3f25-4d9c-8662-21cc71a46fde",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "7ae16fa8-7e69-4a21-a4e4-ebbebfed4735",
-                            Email = "saeedabohend@example.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            Name = "Saeed Abohend",
-                            NormalizedEmail = "SAEEDABOHEND@EXAMPLE.COM",
-                            NormalizedUserName = "SAEEDABOHEND@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBOyrTAn3Iwob5ZHC68Txtjjeh7UQ00nr+sNkZL9wrVDC6OcxsaADUxhgZHU99c6jg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "a0fd2b32-34e9-4526-8293-e64d69e32a8e",
-                            TwoFactorEnabled = false,
-                            UserName = "saeedabohend@example.com"
-                        },
-                        new
-                        {
-                            Id = "32cac776-1bf2-470c-9fb6-a5d651d77f47",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "de51bcc0-67a2-48bb-b63c-ab9704ba919f",
-                            Email = "abdoabohend@example.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            Name = "AbdoAbohend",
-                            NormalizedEmail = "ABDOABOHEND@EXAMPLE.COM",
-                            NormalizedUserName = "ABDOABOHEND@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAZ99k+h6wxbT7OTSQ+IfIhkePGpnrRPD1oHiTjHJ/G3vu5/Zyuvev8mY7IvTXL0aA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "e6016912-a828-43f5-b5c7-8ac066a70439",
-                            TwoFactorEnabled = false,
-                            UserName = "abdoabohend@example.com"
-                        },
-                        new
-                        {
-                            Id = "3adcf16a-9159-48e8-9079-9c9436adbd31",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "05bbd642-35c8-48ab-ac17-0ac6963aef36",
-                            Email = "ziadabohend@example.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            Name = "Ziad Abohend",
-                            NormalizedEmail = "ZIADABOHEND@EXAMPLE.COM",
-                            NormalizedUserName = "ZIADABOHEND@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEL9gAzamOO5kvEiT2i5Twby6eOh+zgOWztcciTO47cviedUtvsvvCWwjRYORTgwG8A==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "b8dc01b6-ae43-4f1e-ac67-df0d5cc54580",
-                            TwoFactorEnabled = false,
-                            UserName = "ziadabohend@example.com"
-                        });
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Category", b =>
@@ -174,29 +107,6 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "All About Mobile Phones",
-                            Name = "Mobile Phones"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "All About Laptops",
-                            Name = "Laptops"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "All About Tablets",
-                            Name = "Tablets"
-                        });
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.Order", b =>
@@ -315,62 +225,6 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryId = 1,
-                            Description = "Iphone 14 Pro Max",
-                            Image = "images/products/image1.webp",
-                            Name = "Iphone 14 Pro",
-                            Price = 1200m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryId = 1,
-                            Description = "Samsung Galaxy S23 Ultra",
-                            Image = "images/products/image2.webp",
-                            Name = "Samsung Galaxy S23",
-                            Price = 1000m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CategoryId = 2,
-                            Description = "Dell Inspiron 15 3000",
-                            Image = "images/products/image3.jpg",
-                            Name = "Dell Inspiron 15",
-                            Price = 1500m
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CategoryId = 2,
-                            Description = "HP Pavilion 15",
-                            Image = "images/products/image4.jpg",
-                            Name = "HP Pavilion",
-                            Price = 1400m
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CategoryId = 3,
-                            Description = "Hwawei MatePad Pro",
-                            Image = "images/products/image5.jpg",
-                            Name = "Hwawei MatePad",
-                            Price = 600m
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CategoryId = 3,
-                            Description = "Samsung Galaxy Tab S8",
-                            Image = "images/products/image6.jpg",
-                            Name = "Samsung Galaxy Tab S8",
-                            Price = 700m
-                        });
                 });
 
             modelBuilder.Entity("Ecommerce.Entities.Models.ShoppingCartItem", b =>
@@ -408,26 +262,6 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "0c95e81f-8e01-4443-8c2d-18ff9f502dc4",
-                            Name = "admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "419d9ae1-edf2-4d9e-ab7c-4712684966df",
-                            Name = "customer",
-                            NormalizedName = "CUSTOMER"
-                        },
-                        new
-                        {
-                            Id = "ef4e7bda-89bc-4953-9d53-ca00a054cf78",
-                            Name = "editor",
-                            NormalizedName = "EDITOR"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -504,28 +338,6 @@ namespace Ecommerce.DataAccess.Migrations
                     b.HasKey("RoleId", "UserId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = "0c95e81f-8e01-4443-8c2d-18ff9f502dc4",
-                            UserId = "e04c3582-8b0b-488a-bf42-59adbe0a5928"
-                        },
-                        new
-                        {
-                            RoleId = "419d9ae1-edf2-4d9e-ab7c-4712684966df",
-                            UserId = "bbc1210d-3f25-4d9c-8662-21cc71a46fde"
-                        },
-                        new
-                        {
-                            RoleId = "419d9ae1-edf2-4d9e-ab7c-4712684966df",
-                            UserId = "32cac776-1bf2-470c-9fb6-a5d651d77f47"
-                        },
-                        new
-                        {
-                            RoleId = "419d9ae1-edf2-4d9e-ab7c-4712684966df",
-                            UserId = "3adcf16a-9159-48e8-9079-9c9436adbd31"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

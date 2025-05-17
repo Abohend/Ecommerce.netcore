@@ -16,8 +16,12 @@ namespace Ecommerce.Entities.Models
         public string Phone { get; set; } = string.Empty;
         public string UserId { get; set; } = string.Empty;
         public ApplicationUser? User { get; set; }
-        public IEnumerable<ShoppingCartItem>? ShoppingCartItems { get; set; }
-        //stripe attributes
+        public IEnumerable<OrderItem>? OrderItems { get; set; }
+        // shipping attributes
+        public string? Carrier { get; set; }
+        public string? TrackingNumber { get; set; }
+        public DateTime ShippingDate { get; set; }
+        // stripe attributes
         public string? SessionId { get; set; }
         public string? PaymentIntentId { get; set; }
     }

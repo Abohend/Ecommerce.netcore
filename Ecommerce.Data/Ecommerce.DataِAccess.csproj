@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ecommerce.Entitties\Ecommerce.Entities.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,6 +11,7 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = CustomRoles.admin)]
+
     public class ProductsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -61,11 +62,11 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
             {
                 if (file != null)
                 {
-                    productVM.Product.Image = _fileService.UploadFile("products", file);
+                    productVM.Product.Image = _fileService.UploadFile("images/products", file);
                 }
                 _unitOfWork.Product.Add(productVM.Product);
                 _unitOfWork.Complete();
-                TempData["toast"] = "Product has been created sucessfully";
+                TempData["toast"] = "Product has been created successfully";
                 TempData["toastType"] = "success";
                 return RedirectToAction("Index");
             }
@@ -105,11 +106,11 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
                 if (file != null)
                 {
                     _fileService.DeleteFile(productVM.Product.Image);
-                    productVM.Product.Image = _fileService.UploadFile("products", file);
+                    productVM.Product.Image = _fileService.UploadFile("images/products", file);
                 }
                 _unitOfWork.Product.Update(productVM.Product);
                 _unitOfWork.Complete();
-                TempData["toast"] = "Product has been updated sucessfully";
+                TempData["toast"] = "Product has been updated successfully";
                 TempData["toastType"] = "info";
                 return RedirectToAction("Index");
             }

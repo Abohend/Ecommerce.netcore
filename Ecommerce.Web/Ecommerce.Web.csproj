@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Models\**" />
+    <Compile Remove="wwwroot\images\NewFolder\**" />
     <Content Remove="Models\**" />
+    <Content Remove="wwwroot\images\NewFolder\**" />
     <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
     <None Remove="Models\**" />
+    <None Remove="wwwroot\images\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\NewFolder\" />
     <Folder Include="wwwroot\lib\bootstrap\" />
     <Folder Include="wwwroot\lib\bootstrap\dist\css\" />
     <Folder Include="wwwroot\lib\bootstrap\dist\js\" />
