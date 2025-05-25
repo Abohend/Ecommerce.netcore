@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Entities.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using X.PagedList.Extensions;
 
 namespace Ecommerce.Web.Areas.Customer.Controllers
 {
@@ -13,9 +14,10 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
         {
             this._unitOfWork = unitOfWork;
         }
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1)
         {
-            var products = _unitOfWork.Product.GetAll(includeEntities: "Category");
+            const int pageSize = 6;
+            var products = _unitOfWork.Product.GetAll(includeEntities: "Category").ToPagedList(pageNumber, pageSize);
             return View(products);
         }
         public IActionResult Details(int id)

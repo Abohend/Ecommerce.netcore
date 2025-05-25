@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Ecommerce.Entities.Models.Product>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IEnumerable<Ecommerce.Entities.Models.Product>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -61,16 +63,18 @@
                             }
 
                             <div class="col-12">
-                                <div class="pagination d-flex justify-content-center mt-5">
-                                    <a href="#" class="rounded">&laquo;</a>
-                                    <a href="#" class="active rounded">1</a>
-                                    <a href="#" class="rounded">2</a>
-                                    <a href="#" class="rounded">3</a>
-                                    <a href="#" class="rounded">4</a>
-                                    <a href="#" class="rounded">5</a>
-                                    <a href="#" class="rounded">6</a>
-                                    <a href="#" class="rounded">&raquo;</a>
-                                </div>
+                                <nav>
+                                    @Html.PagedListPager(
+                                             (IPagedList)Model,
+                                             page => Url.Action("Index", new { pageNumber = page }),
+                                             new PagedListRenderOptions
+                                    {
+                                        UlElementClasses = new[] { "pagination", "d-flex", "justify-content-center", "mt-5" },
+                                        LiElementClasses = new[] { "page-item" },
+                                        PageClasses = new[] { "page-link" }
+                                    }
+                                             )
+                                </nav>
                             </div>
                         </div>
                     </div>
