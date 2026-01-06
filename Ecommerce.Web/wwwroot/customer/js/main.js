@@ -13,21 +13,21 @@
 
 
     // Fixed Navbar
-    //$(window).scroll(function () {
-    //    if ($(window).width() < 992) {
-    //        if ($(this).scrollTop() > 55) {
-    //            $('.fixed-top').addClass('shadow');
-    //        } else {
-    //            $('.fixed-top').removeClass('shadow');
-    //        }
-    //    } else {
-    //        if ($(this).scrollTop() > 55) {
-    //            $('.fixed-top').addClass('shadow').css('top', -55);
-    //        } else {
-    //            $('.fixed-top').removeClass('shadow').css('top', 0);
-    //        }
-    //    } 
-    //});
+    $(window).scroll(function () {
+        if ($(window).width() < 992) {
+            if ($(this).scrollTop() > 55) {
+                $('.fixed-top').addClass('shadow');
+            } else {
+                $('.fixed-top').removeClass('shadow');
+            }
+        } else {
+            if ($(this).scrollTop() > 55) {
+                $('.fixed-top').addClass('shadow');
+            } else {
+                $('.fixed-top').removeClass('shadow');
+            }
+        } 
+    });
     
     
    // Back to top button
@@ -118,7 +118,6 @@
         $('.btn-play').click(function () {
             $videoSrc = $(this).data("src");
         });
-        console.log($videoSrc);
 
         $('#videoModal').on('shown.bs.modal', function (e) {
             $("#video").attr('src', $videoSrc + "?autoplay=1&amp;modestbranding=1&amp;showinfo=0");

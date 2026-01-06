@@ -8,16 +8,14 @@
 
   <ItemGroup>
     <Compile Remove="Models\**" />
-    <Compile Remove="wwwroot\images\NewFolder\**" />
     <Content Remove="Models\**" />
-    <Content Remove="wwwroot\images\NewFolder\**" />
     <EmbeddedResource Remove="Models\**" />
-    <EmbeddedResource Remove="wwwroot\images\NewFolder\**" />
     <None Remove="Models\**" />
-    <None Remove="wwwroot\images\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.8" />
@@ -31,7 +29,7 @@
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
     <PackageReference Include="Stripe.net" Version="47.2.0" />
-    <PackageReference Include="X.PagedList.Mvc.Core" Version="10.5.7" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="10.5.9" />
   </ItemGroup>
 
   <ItemGroup>

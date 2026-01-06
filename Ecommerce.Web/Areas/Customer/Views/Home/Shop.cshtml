@@ -1,0 +1,213 @@
+﻿@using Microsoft.AspNetCore.Http
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model ShopVM
+
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<div class="container-fluid fruite py-5">
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-lg-12">
+                <div class="row g-4 mt-2">
+                    <div class="col-xl-3">
+                        <form asp-action="Shop" asp-controller="Home" asp-area="Customer"
+                              method="get" class="d-flex mb-4">
+                            <input type="text"
+                                   name="search"
+                                   value="@Model.Search"
+                                   class="form-control p-3"
+                                   style="border-radius:10px 0 0 10px"
+                                   placeholder="Search products..." />
+
+                            <button type="button"
+                                    id="clear-search-btn"
+                                    class="btn bg-light border-1 ms-1 @(string.IsNullOrEmpty(Model.Search) ? "d-none" : "")"
+                                    style="border-radius:0; padding:0 10px; display:inline-flex; align-items:center; justify-content:center;"
+                                    title="Clear search"
+                                    onclick="clearSearch()">
+                                &#10005;
+                            </button>
+
+                            <input type="hidden"
+                                   name="categoryId"
+                                   value="@Model.Search" />
+
+                            <button type="submit" 
+                                    class="btn bg-light border-1"
+                                    style="border-radius:0 10px 10px 0"
+                            >Search</button>
+                        </form>
+                    </div>
+                    <div class="col-6"></div>
+                    <div class="col-xl-3">
+                        <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+                            <label for="fruits">Default Sorting:</label>
+                            <select class="border-0 form-select-sm bg-light me-3"
+                                    onchange="onSortChange(this.value)">
+                                <option value="">Default</option>
+                                <option value="price_asc" selected="@(Model.Sort == "price_asc")">
+                                    Price 🔽
+                                </option>
+                                <option value="price_desc" selected="@(Model.Sort == "price_desc")">
+                                    Price 🔼
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <div class="row g-4">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <h4>Categories</h4>
+                                    <ul class="list-unstyled fruite-categorie">
+                                        @foreach (var category in Model.Categories)
+                                        {
+                                            <li>
+                                                <div class="d-flex justify-content-between fruite-name">
+                                                    <a asp-action="Shop"
+                                                       asp-route-categoryId="@category.Id"
+                                                       asp-route-search="@Model.Search"
+                                                       asp-route-sort="@Model.Sort"
+                                                       asp-route-minPrice="@Model.MinPrice"
+                                                       asp-route-maxPrice="@Model.MaxPrice">
+                                                        <i class="fas fa-apple-alt me-2"></i>
+                                                        @category.Name
+                                                    </a>
+                                                    <span>(@category.ProductCount)</span>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <h4 class="mb-2">Price</h4>
+                                    <form asp-action="Shop"
+                                          asp-controller="Home"
+                                          asp-area="Customer"
+                                          method="get">
+
+                                        <input type="range"
+                                               class="form-range w-100"
+                                               name="maxPrice"
+                                               min="0"
+                                               max="50"
+                                               value="@(Model.MaxPrice ?? 50)"
+                                               oninput="amount.value=this.value" />
+
+                                        <output id="amount">
+                                            @(Model.MaxPrice ?? 50)
+                                        </output>
+                                    <input type="hidden" name="categoryId" value="@Model.CategoryId" />
+                                    <input type="hidden" name="search" value="@Model.Search" />
+                                    <input type="hidden" name="sort" value="@Model.Sort" />
+
+                                    <button type="submit" class="btn btn-primary w-100 mt-3">
+                                        Apply
+                                    </button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-9">
+                        <div class="row g-4 justify-content-center" id="products-container">
+                            @{
+                                var index = 0;
+                            }
+                            @foreach (var item in Model.Products)
+                            {
+                                <div class="col-md-6 col-lg-6 col-xl-4" data-price="@item.Price" data-original-index="@index">
+                                    <div class="rounded position-relative fruite-item">
+                                        <!-- Fixed card height -->
+                                        <div class="fruite-img">
+                                            <!-- Fixed image container height and centered content -->
+                                            <a asp-action="details" asp-route-id="@item.Id">
+                                                <img src=~/@item.Image class="img-fluid w-100 rounded-top" alt="@item.Name" style="object-fit: contain; object-position: center;">
+                                            </a>
+                                        </div>
+                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">@item.Category?.Name</div>
+                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                            <h4>@item.Name</h4>
+                                            <p>@item.Description</p>
+                                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                                <p class="text-dark fs-5 fw-bold mb-0 price-text">$@item.Price</p>
+                                                <form asp-area="Customer" asp-controller="ShoppingCarts" asp-action="Increment" asp-route-productId="@item.Id" data-ajax="true" data-ajax-method="Post">
+                                                    <button type="submit" onclick="OnCartAdd()" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                        <i class="fa fa-shopping-bag me-2 text-primary"></i>
+                                                        Add to cart
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                index++;
+                            }
+
+                        </div>
+
+                        <div class="col-12">
+                            <nav>
+                                @Html.PagedListPager(
+                                (IPagedList)Model.Products,
+                                    page => Url.Action("Shop", new {
+                                        pageNumber = page,
+                                        search = Model.Search,
+                                        categoryId = Model.CategoryId,
+                                        sort = Model.Sort,
+                                        minPrice = Model.MinPrice,
+                                        maxPrice = Model.MaxPrice
+                                    }),
+                                    new PagedListRenderOptions
+                                    {
+                                        UlElementClasses = new[] { "pagination", "d-flex", "align-items-center", "justify-content-center", "mt-5" },
+                                        LiElementClasses = new[] { "page-item" },
+                                        PageClasses = new[] { "page-link" }
+                                    }
+                                )
+                            </nav>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+            function onSortChange(sortValue) {
+                const url = new URL(window.location.href);
+
+                if (sortValue) {
+                    url.searchParams.set("sort", sortValue);
+                } else {
+                    url.searchParams.delete("sort");
+                }
+
+                url.searchParams.set("pageNumber", 1); // reset page
+                window.location.href = url.toString();
+            }
+
+            function clearSearch() {
+                const url = new URL(window.location.href);
+                // Remove the 'search' query parameter
+                url.searchParams.delete("search");
+                // Reset paging
+                url.searchParams.set("pageNumber", 1);
+                // Navigate to updated URL
+                window.location.href = url.toString();
+            }
+    </script>
+}

@@ -43,7 +43,7 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ProductVM productVM = new ProductVM()
+            ProductCategoriesVM productVM = new ProductCategoriesVM()
             {
                 Product = new Product(),
                 Categories = _unitOfWork.Category.GetAll().Select(c => new SelectListItem
@@ -56,7 +56,7 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Create(ProductVM productVM, IFormFile file)
+        public IActionResult Create(ProductCategoriesVM productVM, IFormFile file)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ProductVM productVM = new ProductVM()
+            ProductCategoriesVM productVM = new ProductCategoriesVM()
             {
                 Product = product,
                 Categories = _unitOfWork.Category.GetAll().Select(c => new SelectListItem
@@ -99,7 +99,7 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Edit(ProductVM productVM, IFormFile? file)
+        public IActionResult Edit(ProductCategoriesVM productVM, IFormFile? file)
         {
             if (ModelState.IsValid)
             {

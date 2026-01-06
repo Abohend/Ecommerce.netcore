@@ -135,6 +135,10 @@
     color: var(--bs-primary);
 }
 
+.category-filter-btn {
+    border: none;
+}
+
 .navbar .dropdown-toggle::after {
     border: none;
     content: "\f107";
@@ -188,7 +192,7 @@
     position: relative;
 }
 
-.carousel-item a {
+.carousel-item button {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -228,7 +232,7 @@
 @media (min-width: 992px) {
     .hero-header,
     .page-header {
-        margin-top: 152px !important;
+        margin-top: 100px !important;
     }
 }
 
@@ -277,13 +281,13 @@
 
 
 /*** Fruits Start ***/
-.fruite .tab-class .nav-item a.active {
+.fruite .tab-class .nav-item a.active, .fruite .tab-class button.active {
     background: var(--bs-secondary) !important;
 }
 
-.fruite .tab-class .nav-item a.active span {
-    color: var(--bs-white) !important; 
-}
+    .fruite .tab-class .nav-item a.active span, .fruite .tab-class button.active {
+        color: var(--bs-white) !important;
+    }
 
 .fruite .fruite-categorie .fruite-name {
     line-height: 40px;
@@ -494,4 +498,3 @@
     line-height: 35px;
 }
 /*** Footer End ***/
-

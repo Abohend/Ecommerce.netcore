@@ -8,6 +8,7 @@ using Ecommerce.DataAccess.Data;
 using Ecommerce.DataAccess.Implementations;
 using Stripe;
 using FileService = Ecommerce.Web.Services.FileService;
+using Ecommerce.Web.Mapping;
 
 namespace Ecommerce.Web
 {
@@ -35,6 +36,7 @@ namespace Ecommerce.Web
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<FileService>();
             builder.Services.AddSingleton<IEmailSender, EmailSender>();
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             var app = builder.Build();
 
@@ -49,6 +51,8 @@ namespace Ecommerce.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseStatusCodePagesWithReExecute("/errors/404");
 
             StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 

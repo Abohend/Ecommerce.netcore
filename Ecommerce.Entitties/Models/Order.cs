@@ -16,7 +16,7 @@ namespace Ecommerce.Entities.Models
         public string Phone { get; set; } = string.Empty;
         public string UserId { get; set; } = string.Empty;
         public ApplicationUser? User { get; set; }
-        public IEnumerable<OrderItem>? OrderItems { get; set; }
+        public ICollection<OrderItem>? OrderItems { get; set; }
         // shipping attributes
         public string? Carrier { get; set; }
         public string? TrackingNumber { get; set; }
