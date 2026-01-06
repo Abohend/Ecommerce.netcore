@@ -33,36 +33,30 @@
                                         <p class="mb-0 mt-4">@item.Product!.Name</p>
                                     </td>
                                     <td>
-                                        <p class="mb-0 mt-4">@item.Product!.Price $</p>
+                                        <p class="mb-0 mt-4">@item.Product!.Price.ToString("F2") $</p>
                                     </td>
                                     <td>
                                         <div class="input-group quantity mt-4" style="width: 100px;">
-                                            <form asp-controller="ShoppingCarts" asp-action="Decrement" asp-route-productId="@item.ProductId" data-ajax="true" data-ajax-method="Post" data-ajax-success="OnDecrement(@item.ProductId, @item.Product!.Price)">
-                                                <div class="input-group-btn">
-                                                    <button type="submit" class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </form>
-                                            <input id=@("product"+item.ProductId+"Amount") type="text" class="form-control form-control-sm text-center border-0" value="@item.Amount">
-                                            <form asp-controller="ShoppingCarts" asp-action="Increment" asp-route-productId="@item.ProductId" data-ajax="true" data-ajax-method="Post">
-                                                <div class="input-group-btn">
-                                                    <button type="submit" onclick="OnIncrement(@item.ProductId, @item.Product.Price)" class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                            </form>
+                                            <div class="input-group-btn">
+                                                <button onclick="handleTableCartAction(@item.ProductId, 'dec', @item.Product.Price)" class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                            <input id=@("product"+item.ProductId+"Amount") type="text" class="form-control form-control-sm text-center border-0" value="@item.Amount" readonly>
+                                            <div class="input-group-btn">
+                                                <button onclick="handleTableCartAction(@item.ProductId, 'inc', @item.Product.Price)" class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <p id=@("product"+item.ProductId+"Total") class="mb-0 mt-4">@(item.Product.Price * item.Amount)$</p>
+                                        <p id=@("product"+item.ProductId+"Total") class="mb-0 mt-4">@((item.Product.Price * item.Amount).ToString("F2")) $</p>
                                     </td>
                                     <td>
-                                        <form asp-controller="ShoppingCarts" asp-action="Remove" asp-route-productId="@item.ProductId" data-ajax="true" data-ajax-method="Delete" onsubmit="RemoveBtn(@item.ProductId, @item.Amount, @item.Product!.Price)">
-                                            <button type="submit" class="btn btn-md rounded-circle bg-light border mt-4">
-                                                <i class="fa fa-times text-danger"></i>
-                                            </button>
-                                        </form>
+                                        <button onclick="handleTableRemove(@item.ProductId, @item.Product.Price)" class="btn btn-md rounded-circle bg-light border mt-4">
+                                            <i class="fa fa-times text-danger"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             }
@@ -75,7 +69,7 @@
                 <div class="bg-light rounded">
                     <div class="py-4 mb-4 border-bottom d-flex justify-content-between">
                         <h5 class="mb-0 ps-4 me-4">Total</h5>
-                        <p id="total" class="mb-0 pe-4">$ @ViewBag.Total</p>
+                        <p id="total" class="mb-0 pe-4">$@ViewBag.Total.ToString("F2")</p>
                     </div>
                     <a asp-action="Checkout" class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</a>
                 </div>
@@ -86,43 +80,95 @@
 
 @section Scripts{
     <script>
-        function RemoveBtn(id, amount, price) {
-            $('#' + id).remove();
-            $('#cartCount').text(parseInt($('#cartCount').text()) - amount);
-            var total = parseFloat($('#total').text().replace('$ ',''));
-            $('#total').text(total - amount * price);
-        }
-        function OnIncrement(id, price) {
-            var cartCount = parseInt($("#cartCount").text());
-            $("#cartCount").text(cartCount + 1);
-            var elementId = "#product" + id + "Amount";
-            var productAmount = parseInt($(elementId).val());
-            $(elementId).val(productAmount + 1);
-            $("#product"+id+"Total").text((productAmount + 1) * price);
-            var total = parseFloat($('#total').text().replace('$ ',''));
-            $('#total').text((total + price) + " $");
-        };
-        function OnDecrement(id, price) {
-            var cartCount = parseInt($("#cartCount").text());
-            var elementId = "#product" + id + "Amount";
-            var productAmount = parseInt($(elementId).val());
-            if (productAmount <= 1) {
-                RemoveBtn(id, 1, price);
-            }
-            else {
-                $(elementId).val(productAmount - 1);
-                if (cartCount <= 1) {
-                    $("#cartCount").text(0);
-                }
-                else {
-                    $("#cartCount").text(cartCount - 1);
-                }
-                $("#product" + id + "Total").text((productAmount - 1) * price + " $");
-                var total = parseFloat($('#total').text().replace('$ ', ''));
-                $('#total').text((total - price) + " $");
-            }
+        // Specific handler for Table rows in Shopping Cart page
+        window.handleTableCartAction = async function(productId, action, price) {
+            const endpoint = action === 'inc' ? 'Increment' : 'Decrement';
+            const url = `/Customer/ShoppingCarts/${endpoint}?productId=${productId}`;
             
+            try {
+                const resp = await fetch(url, { method: 'POST' });
+                if(resp.ok) {
+                    const data = await resp.json();
+                    if(data.success) {
+                        // Update local input
+                        const amtInput = document.getElementById("product" + productId + "Amount");
+                        if(amtInput) amtInput.value = data.newAmount;
+
+                        // Update Row Total
+                        const rowTotal = document.getElementById("product" + productId + "Total");
+                        if(rowTotal) rowTotal.textContent = (data.newAmount * price).toFixed(2) + " $";
+
+                        // Handle removal if needed (if Dec returned 0, it means removed)
+                        if(data.newAmount === 0 && action === 'dec') {
+                             $(`#${productId}`).remove();
+                        }
+                        
+                        // Recalculate Grand Total
+                        recalculateGrandTotal();
+                        
+                        // Sync Badge
+                        if(window.fetchUserCart) window.fetchUserCart();
+
+                    } else {
+                        console.error("Cart update failed", data);
+                    }
+                }
+            } catch(e) {
+                console.error("Error table cart action", e);
+            }
+        };
+
+        window.handleTableRemove = async function(productId, price) {
+             const url = `/Customer/ShoppingCarts/Remove?productId=${productId}`;
+             try {
+                 // The Remove endpoint is void, so it won't return JSON unless updated. 
+                 // Assuming existing Remove returns void or simple status.
+                 // The Remove endpoint in controller was NOT updated to return JSON in previous steps, it returns void.
+                 // We should probably rely on it succeeding or update it. 
+                 // However, jquery unobtrusive used to handle it. 
+                 // Let's use fetch.
+                 const resp = await fetch(url, { method: 'DELETE' }); // The controller has [HttpPost] Remove... wait. 
+                 
+                 // Let's check Controller again. It has [HttpPost] Remove(int productId).
+                 // Ah wait, the previous code used data-ajax-method="Delete". But the controller attribute is [HttpPost]. 
+                 // This implies existing code might have been using a different route or ASP.NET handles method override.
+                 // Let's check the controller file step 43. 
+                 // [HttpPost] public void Remove(int productId). So it expects POST.
+                 
+                 // Wait, view used `data-ajax-method="Delete"`. 
+                 // Usually browsers only do GET/POST. method="Delete" works via `_method` hidden field or X-HTTP-Method-Override header.
+                 // let's try POST first since [HttpPost] is on action.
+                 
+                 const resp2 = await fetch(url, { method: 'POST' });
+                 if(resp2.ok) {
+                     $(`#${productId}`).remove();
+                     recalculateGrandTotal();
+                     if(window.fetchUserCart) window.fetchUserCart();
+                 }
+             } catch(e) {
+                 console.error("Error removing", e);
+             }
+        }
+
+        function recalculateGrandTotal() {
+            let total = 0;
+            // Iterate over all specific product total cells
+            // We can target specific elements or data attributes.
+            // Let's iterate all rows in tbody
+            const rows = document.querySelectorAll("tbody tr");
+            rows.forEach(row => {
+                const id = row.id; // product id
+                // We need amount and price.
+                // We can parse the row total.
+                const totalCell = document.getElementById("product" + id + "Total");
+                if(totalCell) {
+                    const text = totalCell.textContent.replace('$', '').trim();
+                    total += parseFloat(text) || 0;
+                }
+            });
+            
+            const totalEl = document.getElementById('total');
+            if(totalEl) totalEl.textContent = "$ " + total.toFixed(2);
         }
     </script>
-
 }

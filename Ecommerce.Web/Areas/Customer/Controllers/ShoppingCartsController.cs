@@ -40,6 +40,15 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             return Json(cartCount);
         }
 
+        [HttpGet]
+        public IActionResult GetUserCart()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            var shoppingCarts = _unitOfWork.ShoppingCart.GetAll(x => x.UserId == userId);
+            var cartData = shoppingCarts.ToDictionary(k => k.ProductId, v => v.Amount);
+            return Json(cartData);
+        }
+
         [HttpPost]
         public IActionResult Increment(int productId)
         {
@@ -53,35 +62,42 @@ namespace Ecommerce.Web.Areas.Customer.Controllers
             }
             else
             {
-                _unitOfWork.ShoppingCart.Add(new ShoppingCartItem
+                shoppingCart = new ShoppingCartItem
                 {
                     Amount = 1,
                     ProductId = productId,
                     UserId = userId
-                });
+                };
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
             }
             _unitOfWork.Complete();
-            return Json(new { success = true , message = "Product added to cart successfully." });
+            return Json(new { success = true, newAmount = shoppingCart.Amount, message = "Product added/incremented successfully." });
         }
         
         [HttpPost]
-        public void Decrement(int productId)
+        public IActionResult Decrement(int productId)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             var shoppingCart = _unitOfWork.ShoppingCart
                 .GetOne(x => x.ProductId == productId && x.UserId == userId);
+            
+            uint newAmount = 0;
             if (shoppingCart != null)
             {
                 if (shoppingCart.Amount > 1)
                 {
                     shoppingCart.Amount--;
+                    newAmount = shoppingCart.Amount;
                     _unitOfWork.ShoppingCart.Update(shoppingCart);
                 }
                 else
+                {
                     _unitOfWork.ShoppingCart.Remove(shoppingCart);
+                    newAmount = 0;
+                }
                 _unitOfWork.Complete();
             }
-            
+            return Json(new { success = true, newAmount = newAmount, message = "Product decremented successfully." });
         }
         
         [HttpPost]

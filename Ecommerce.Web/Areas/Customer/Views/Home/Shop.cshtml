@@ -140,12 +140,12 @@
                                             <p>@item.Description</p>
                                             <div class="d-flex justify-content-between flex-lg-wrap">
                                                 <p class="text-dark fs-5 fw-bold mb-0 price-text">$@item.Price</p>
-                                                <form asp-area="Customer" asp-controller="ShoppingCarts" asp-action="Increment" asp-route-productId="@item.Id" data-ajax="true" data-ajax-method="Post">
-                                                    <button type="submit" onclick="OnCartAdd()" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                <div id="action-container-@item.Id" class="d-flex align-items-center">
+                                                    <button onclick="handleCartAction(@item.Id, 'inc')" class="btn border border-secondary rounded-pill px-3 text-primary">
                                                         <i class="fa fa-shopping-bag me-2 text-primary"></i>
                                                         Add to cart
                                                     </button>
-                                                </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

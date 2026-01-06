@@ -160,6 +160,10 @@
                     const col = document.createElement('div');
                     col.className = 'col-md-6 col-lg-4 col-xl-3';
 
+                    // Use global cart state to render the correct button state immediately
+                    const amount = window.userCart ? (window.userCart[product.id] || 0) : 0;
+                    const infoHtml = window.getCartControlHtml ? window.getCartControlHtml(product.id, amount) : '';
+
                     col.innerHTML = `
                         <div class="rounded position-relative fruite-item">
                             <div class="fruite-img">
@@ -169,14 +173,11 @@
                             <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                                 <h4>${escapeHtml(product.name)}</h4>
                                 <p>${escapeHtml(product.description || '')}</p>
-                                <div class="d-flex justify-content-between flex-lg-wrap">
-                                    <p class="text-dark fs-5 fw-bold mb-0">$${parseFloat(product.price || 0).toFixed(2)} / kg</p>
-                                    <form asp-area="Customer" asp-controller="ShoppingCarts" asp-action="Increment" asp-route-productId="${escapeHtml(product.Id)}" data-ajax="true" data-ajax-method="Post">
-                                        <button type="submit" onclick="OnCartAdd()" class="btn border border-secondary rounded-pill px-3 text-primary">
-                                            <i class="fa fa-shopping-bag me-2 text-primary"></i>
-                                            Add to cart
-                                        </button>
-                                    </form>
+                                <div class="d-flex justify-content-between flex-lg-wrap align-items-center">
+                                    <p class="text-dark fs-5 fw-bold mb-0 me-2">$${parseFloat(product.price || 0).toFixed(2)} / kg</p>
+                                    <div id="action-container-${product.id}" class="d-flex align-items-center">
+                                        ${infoHtml}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -186,8 +187,9 @@
             }
 
             function escapeHtml(text) {
-                if (!text) return '';
-                return text
+                if (text === null || text === undefined) return '';
+                const str = typeof text === 'string' ? text : String(text);
+                return str
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;')
@@ -198,6 +200,11 @@
             async function loadProducts(categoryId) {
                 productsGrid.innerHTML = '<div class="col-12 text-center">Loading products...</div>';
                 try {
+                    // Ensure cart is fetched *before* rendering if not already
+                    if (!window.userCart || Object.keys(window.userCart).length === 0) {
+                         if (window.fetchUserCart) await window.fetchUserCart();
+                    }
+                    
                     const url = categoryId ? `/customer/home/shop?categoryId=${encodeURIComponent(categoryId)}` : '/customer/home/shop';
                     const resp = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
                     if (!resp.ok) throw new Error('Network response was not ok');
@@ -218,7 +225,7 @@
                 });
             });
 
-            // Initial load: All products
+            // Initial load
             loadProducts();
         })();
     </script>
