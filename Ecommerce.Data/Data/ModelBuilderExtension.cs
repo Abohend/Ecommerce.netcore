@@ -212,5 +212,17 @@ namespace Ecommerce.DataAccess.Data
             );
         }
 
+        public static void SeedContactInfo(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ContactInfo>().HasData(
+                new ContactInfo
+                {
+                    Id = 1,
+                    Address = "123 Street, Nasr City, Egypt",
+                    Phone = "+201065964363",
+                    Email = "info@example.com"
+                }
+            );
+        }
     }
 }

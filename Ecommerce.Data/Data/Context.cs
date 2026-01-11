@@ -21,6 +21,8 @@ namespace Ecommerce.DataAccess.Data
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<ContactInfo> ContactInfos { get; set; }
+        public DbSet<ContactMessage> ContactMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,6 +52,7 @@ namespace Ecommerce.DataAccess.Data
             modelBuilder.SeedCustomerUsers(_configuration);
             modelBuilder.SeedCategories();
             modelBuilder.SeedProducts();
+            modelBuilder.SeedContactInfo();
             #endregion
         }
     }

@@ -1,0 +1,49 @@
+@model Ecommerce.Entities.Models.ContactInfo
+
+@{
+    ViewData["Title"] = "Manage Contact Info";
+}
+
+<div class="row">
+    <div class="col-8">
+        <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <h6 class="text-white text-capitalize ps-3">Update Contact Information</h6>
+                </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+                <form asp-action="Info" method="post" class="p-4">
+                    <input type="hidden" asp-for="Id" />
+                    
+                    <div class="input-group input-group-outline mb-3">
+                        <label asp-for="Address" class="form-label"></label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-group input-group-outline mb-3">
+                        <label asp-for="Phone" class="form-label"></label>
+                        <input asp-for="Phone" class="form-control" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+
+                    <div class="input-group input-group-outline mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn bg-gradient-success">Update Info</button>
+                    @if(Model != null && Model.Id == 0) {
+                         <small class="text-muted d-block">No contact info found. Taking this action will create the initial record.</small>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

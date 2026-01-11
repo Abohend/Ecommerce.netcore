@@ -5,68 +5,76 @@
     ViewData["Title"] = "Register";
 }
 
-<h1 class="mb-4">@ViewData["Title"]</h1>
+
 
 <div class="container py-5">
-    <div class="row">
-        <div class="col-6">
-            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                <h2>Create a new account.</h2>
-                <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-item">
-                    <label class="form-label my-3" asp-for="Input.Name">Name<sup>*</sup></label>
-                    <input asp-for="Input.Name" class="form-control" autocomplete="name" aria-required="true">
-                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 mt-5">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center py-4 rounded-top-3">
+                    <h3 class="mb-0 fw-bold">Create Account</h3>
+                    <p class="mb-0 text-white-50">Join us to start shopping</p>
                 </div>
-
-                <div class="form-item">
-                    <label class="form-label my-3" asp-for="Input.Address">Address</label>
-                    <input asp-for="Input.Address" class="form-control" autocomplete="address" aria-required="false">
-                    <span asp-validation-for="Input.Address" class="text-danger"></span>
-                </div>
-
-                <div class="form-item">
-                    <label class="form-label my-3" asp-for="Input.Email">Email<sup>*</sup></label>
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true">
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-
-                <div class="form-item">
-                    <label class="form-label my-3" asp-for="Input.Password">Password<sup>*</sup></label>
-                    <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true">
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-
-                <div class="form-item">
-                    <label class="form-label my-3" asp-for="Input.ConfirmPassword">Confirm Password<sup>*</sup></label>
-                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true">
-                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                </div>
-
-                @if (User.IsInRole(CustomRoles.admin))
-                {
-                    <div class="form-item">
-                        <label class="form-label my-3">Role<sup>*</sup></label><br />
-                        <div class="form-check form-check-inline">
-                            <input asp-for="Input.Role" class="form-check-input" type="radio" id="inlineCheckbox1" value="@CustomRoles.admin">
-                            <label class="form-check-label" for="inlineCheckbox1">Admin</label>
+                <div class="card-body p-5">
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Name" class="form-control" autocomplete="name" aria-required="true" placeholder="Your Name">
+                            <label asp-for="Input.Name">Name</label>
+                            <span asp-validation-for="Input.Name" class="text-danger small"></span>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input asp-for="Input.Role" class="form-check-input" type="radio" id="inlineCheckbox2" value="@CustomRoles.editor">
-                            <label class="form-check-label" for="inlineCheckbox2">Editor</label>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Address" class="form-control" autocomplete="address" aria-required="false" placeholder="123 Main St">
+                            <label asp-for="Input.Address">Address</label>
+                            <span asp-validation-for="Input.Address" class="text-danger small"></span>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input asp-for="Input.Role" class="form-check-input" type="radio" id="inlineCheckbox3" value="@CustomRoles.customer checked">
-                            <label class="form-check-label" for="inlineCheckbox3">Customer</label>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com">
+                            <label asp-for="Input.Email">Email address</label>
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
                         </div>
-                    </div>
-                }
-                
-                <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                    <button id="registerSubmit" type="submit" class="w-10 btn btn-lg btn-primary">Register</button>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Password">
+                                    <label asp-for="Input.Password">Password</label>
+                                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class="form-floating">
+                                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Confirm">
+                                    <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (User.IsInRole(CustomRoles.admin))
+                        {
+                            <div class="mb-4">
+                                <label class="form-label d-block fw-bold text-secondary">Role Selection</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input asp-for="Input.Role" type="radio" class="btn-check" id="roleAdmin" value="@CustomRoles.admin" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="roleAdmin">Admin</label>
+
+                                    <input asp-for="Input.Role" type="radio" class="btn-check" id="roleEditor" value="@CustomRoles.editor" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="roleEditor">Editor</label>
+
+                                    <input asp-for="Input.Role" type="radio" class="btn-check" id="roleCustomer" value="@CustomRoles.customer" autocomplete="off" checked>
+                                    <label class="btn btn-outline-primary" for="roleCustomer">Customer</label>
+                                </div>
+                            </div>
+                        }
+
+                        <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary rounded-pill fw-bold">Register</button>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

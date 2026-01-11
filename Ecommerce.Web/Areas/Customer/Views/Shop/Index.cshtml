@@ -13,7 +13,7 @@
             <div class="col-lg-12">
                 <div class="row g-4 mt-2">
                     <div class="col-xl-3">
-                        <form asp-action="Shop" asp-controller="Home" asp-area="Customer"
+                        <form asp-action="Index" asp-controller="Shop" asp-area="Customer"
                               method="get" class="d-flex mb-4">
                             <input type="text"
                                    name="search"
@@ -69,7 +69,7 @@
                                         {
                                             <li>
                                                 <div class="d-flex justify-content-between fruite-name">
-                                                    <a asp-action="Shop"
+                                                    <a asp-action="Index"
                                                        asp-route-categoryId="@category.Id"
                                                        asp-route-search="@Model.Search"
                                                        asp-route-sort="@Model.Sort"
@@ -88,8 +88,8 @@
                             <div class="col-lg-12">
                                 <div class="mb-3">
                                     <h4 class="mb-2">Price</h4>
-                                    <form asp-action="Shop"
-                                          asp-controller="Home"
+                                    <form asp-action="Index"
+                                          asp-controller="Shop"
                                           asp-area="Customer"
                                           method="get">
 
@@ -159,7 +159,7 @@
                             <nav>
                                 @Html.PagedListPager(
                                 (IPagedList)Model.Products,
-                                    page => Url.Action("Shop", new {
+                                    page => Url.Action("Index", new {
                                         pageNumber = page,
                                         search = Model.Search,
                                         categoryId = Model.CategoryId,
