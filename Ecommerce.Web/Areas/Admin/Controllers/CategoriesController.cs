@@ -20,8 +20,14 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetAllData()
+        {
             var categories = _unitOfWork.Category.GetAll();
-            return View(categories);
+            return Json(new { data = categories });
         }
 
         [HttpGet]
@@ -64,20 +70,17 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
             return View(category);
         }
 
-        [HttpGet]
+        [HttpDelete]
         public IActionResult Delete(int id)
         {
-            return View(_unitOfWork.Category.GetOne(c => c.Id == id));
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Delete(Category category)
-        {
+            var category = _unitOfWork.Category.GetOne(c => c.Id == id);
+            if (category == null)
+            {
+                return Json(new { success = false });
+            }
             _unitOfWork.Category.Remove(category);
             _unitOfWork.Complete();
-            TempData["toast"] = "Category has been deleted sucessfully";
-            TempData["toastType"] = "danger";
-            return RedirectToAction("Index");
+            return Json(new { success = true });
         }
     }
 }

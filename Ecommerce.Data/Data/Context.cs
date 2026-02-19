@@ -23,6 +23,7 @@ namespace Ecommerce.DataAccess.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<ContactInfo> ContactInfos { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<WebsiteView> WebsiteViews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,9 +48,6 @@ namespace Ecommerce.DataAccess.Data
                 .HasKey(oi => new { oi.OrderId, oi.ProductId });
 
             #region Seed Data
-            modelBuilder.SeedRoles();
-            modelBuilder.SeedAdminUser(_configuration);
-            modelBuilder.SeedCustomerUsers(_configuration);
             modelBuilder.SeedCategories();
             modelBuilder.SeedProducts();
             modelBuilder.SeedContactInfo();

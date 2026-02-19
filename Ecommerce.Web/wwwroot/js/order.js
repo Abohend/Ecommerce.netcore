@@ -5,20 +5,23 @@ $(document).ready(function () {
 
 function loaddata() {
     dtble = $("#table").DataTable({
+        "responsive": true,
+        "pageLength": 5,
+        "lengthMenu": [[5, 7, 10, 15], [5, 7, 10, 15]],
         "ajax": {
             "url": "/Admin/Orders/GetAllOrders"
         },
         "columns": [
-            { "data": "id" },
+            { "data": "id", "className": "text-start" },
             { "data": "userName" },
-            { "data": "phone" },
+            { "data": "phone", "className": "text-start" },
             { "data": "orderStatus" },
-            { "data": "total"},
+            { "data": "total", "className": "text-start" },
             {
                 "data": "id",
                 "render": function (data) {
                     return `
-                            <a href="/Admin/orders/Details/${data}" class="btn btn-warning">Edit</a>
+                            <a href="/Admin/orders/Details/${data}" class="btn btn-outline-warning">Edit</a>
                             `
 
                 }

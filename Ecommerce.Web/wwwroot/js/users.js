@@ -5,13 +5,16 @@ $(document).ready(function () {
 
 function loaddata() {
     dtble = $("#table").DataTable({
+        "responsive": true,
+        "pageLength": 5,
+        "lengthMenu": [[5, 7, 10, 15], [5, 7, 10, 15]],
         "ajax": {
             "url": "/Admin/User/GetAllData"
         },
         "columns": [
             { "data": "name" },
             { "data": "email" },
-            { "data": "address" },
+            { "data": "role" },
             {
                 "data": "id",
                 "render": function (data, type, row) {
@@ -36,13 +39,15 @@ function loaddata() {
         $.ajax({
             url: `/Admin/User/LockUnlock/${userId}`,
             type: 'POST',
-            data: JSON.stringify({ id: userId }),
-            contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                
+                toastr.success("User lock status updated");
+                console.log("Lock status updated");
             },
             error: function () {
-                alert("Error during the request.");
+                toastr.error("Error during the request.");
+                // Revert checkbox if failed
+                var checkbox = $(`#flexSwitchCheckDefault_${userId}`);
+                checkbox.prop('checked', !checkbox.is(':checked'));
             }
         });
     });

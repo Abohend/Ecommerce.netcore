@@ -9,17 +9,21 @@ using Ecommerce.DataAccess.Implementations;
 using Stripe;
 using FileService = Ecommerce.Web.Services.FileService;
 using Ecommerce.Web.Mapping;
+using Ecommerce.Web.Filters;
 
 namespace Ecommerce.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<WebsiteViewCounterFilter>();
+            }).AddRazorRuntimeCompilation();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
             builder.Services.AddDbContext<Context>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -39,6 +43,17 @@ namespace Ecommerce.Web
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             var app = builder.Build();
+
+            // Seed Database
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                var configuration = services.GetRequiredService<IConfiguration>();
+                await DbInitializer.InitializeAsync(userManager, roleManager, configuration);
+            } 
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -64,7 +79,7 @@ namespace Ecommerce.Web
 
             app.MapRazorPages();
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }

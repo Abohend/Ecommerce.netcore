@@ -12,7 +12,7 @@
         <div class="col-md-6">
             <div class="card my-4 mx-4">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <div class="bg-gradient-success shadow-success border-radius-lg pt-4 pb-3">
                         <h6 class="text-white text-capitalize ps-3">Order Details</h6>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                                 <span asp-validation-for="@Model.TrackingNumber" class="text-danger"></span>
                             </div>
                             <div class="form-group mx-3">
-                                <input type="submit" asp-action="UpdateOrderDetails" value="Update Pickup Details" class="btn btn-primary" />
+                                <input type="submit" asp-action="UpdateOrderDetails" value="Update Pickup Details" class="btn btn-success" />
                             </div>
                         
                     </div>
@@ -84,7 +84,7 @@
         <div class="col-md-6">
             <div class="card my-4 mx-4">
                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                    <div class="bg-gradient-success shadow-success border-radius-lg pt-4 pb-3">
                         <h6 class="text-white text-capitalize ps-3">Order Summary</h6>
                     </div>
                     <div class="row">
@@ -97,7 +97,7 @@
                                 <li>
                                     <div class="row container">
                                         <div class="col-8">
-                                            <h6 class="my-0 text-primary">@item?.Product?.Name</h6>
+                                            <h6 class="my-0 text-success">@item?.Product?.Name</h6>
                                             <small class="text-muted ms-2">Price : @((item!.Product!.Price).ToString("c")) </small><br />
                                             <small class="text-muted ms-2">Quantity : @item?.Amount</small>
                                         </div>

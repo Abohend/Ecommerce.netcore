@@ -1,4 +1,4 @@
-﻿var dtble;
+var dtble;
 $(document).ready(function () {
     loaddata();
 });
@@ -6,22 +6,26 @@ $(document).ready(function () {
 function loaddata() {
     dtble = $("#table").DataTable({
         "responsive": true,
+        "ajax": {
+            "url": "/Admin/Categories/GetAllData"
+        },
         "pageLength": 5,
         "lengthMenu": [[5, 7, 10, 15], [5, 7, 10, 15]],
-        "ajax": {
-            "url": "/Admin/Products/GetAllData"
-        },
         "columns": [
             { "data": "name" },
             { "data": "description" },
-            { "data": "price", "className": "text-start" },
-            { "data": "category.name" },
+            { 
+                 "data": "createdTime",
+                 "render": function(data) {
+                     return new Date(data).toLocaleString();
+                 }
+            },
             {
                 "data": "id",
                 "render": function (data) {
                     return `
-                            <a href="/Admin/Products/Edit/${data}" class="btn btn-outline-warning">Edit</a>
-                            <a onClick=DeleteItem("/Admin/Products/Delete/${data}") class="btn btn-outline-danger">Delete</a>
+                            <a href="/Admin/Categories/Edit/${data}" class="btn btn-outline-warning">Edit</a>
+                            <a onClick=DeleteItem("/Admin/Categories/Delete/${data}") class="btn btn-outline-danger">Delete</a>
                             `
 
                 }

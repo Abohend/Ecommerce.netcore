@@ -1,7 +1,5 @@
-﻿@model IEnumerable<Category>
-
-@{
-    ViewBag.PageTitle = "View Categories";
+﻿@{
+    ViewBag.PageTitle = "Categories";
     ViewBag.CardTitle = "Categories";
 }
 
@@ -12,46 +10,28 @@
 
 <div class="card my-4 mx-4">
     <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+        <div class="bg-gradient-success shadow-success border-radius-lg pt-4 pb-3">
             <h6 class="text-white text-capitalize ps-3">@ViewBag.CardTitle table</h6>
         </div>
     </div>
     <div class="card-body px-0 pb-2">
-        <div class="table-responsive p-0">
-            <table class="table align-items-center mb-0">
+        <div class="table-responsive px-4">
+            <table id="table" class="table align-items-center mb-0">
                 <thead>
                     <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created Time</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                        <th class="text-uppercase text-success text-s font-weight-bolder opacity-7">Name</th>
+                        <th class="text-uppercase text-success text-s font-weight-bolder opacity-7">Description</th>
+                        <th class="text-uppercase text-success text-s font-weight-bolder opacity-7">Created Time</th>
+                        <th class="text-uppercase text-success text-s font-weight-bolder opacity-7">Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var category in Model)
-                    {
-                        <tr>
-                            <td>
-                                <div class="d-flex px-2 py-1">
-                                    @category.Name
-                                </div>
-                            </td>
-                            <td>
-                                <p class="text-s mb-0">@category.Description</p>
-                            </td>
-                            <td class="align-middle text-center">
-                                <span class="text-secondary text-xs">@category.CreatedTime</span>
-                            </td>
-                            <td class="align-middle text-center text-sm">
-                                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@category.Id">Edit</a>
-                                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@category.Id">Delete</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<a asp-action="Create" class="mx-4 btn btn-primary">New</a>
+<a asp-action="Create" class="mx-4 btn btn-success">New</a>
+
+@section Scripts {
+    <script src="~/js/category.js"></script>
+}

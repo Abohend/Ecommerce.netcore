@@ -3,11 +3,11 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="container-fluid py-5">
+<div class="container-fluid pt-5">
     <div class="container py-5">
         
         <div class="row g-4 justify-content-end align-items-center">
-            <div class="col-8">
+            <div class="col-xl-8 col-12">
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -21,6 +21,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center py-4 text-danger text-3xl">
+                                        Your cart is empty
+                                    </td>
+                                </tr>
+                            }
                             @foreach (var item in Model)
                             {
                                 <tr id=@item.ProductId>
@@ -60,7 +68,6 @@
                                     </td>
                                 </tr>
                             }
-
                         </tbody>
                     </table>
                 </div>

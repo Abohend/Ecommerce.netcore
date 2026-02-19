@@ -1,14 +1,14 @@
 @model Ecommerce.Entities.Models.ContactInfo
 
 @{
-    ViewData["Title"] = "Manage Contact Info";
+    ViewBag.PageTitle = "Manage Contact Info";
 }
 
 <div class="row">
-    <div class="col-8">
+    <div class="col-12">
         <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                <div class="bg-gradient-success shadow-success border-radius-lg pt-4 pb-3">
                     <h6 class="text-white text-capitalize ps-3">Update Contact Information</h6>
                 </div>
             </div>
@@ -16,19 +16,19 @@
                 <form asp-action="Info" method="post" class="p-4">
                     <input type="hidden" asp-for="Id" />
                     
-                    <div class="input-group input-group-outline mb-3">
+                    <div class="input-group input-group-outline mb-3 @(!string.IsNullOrEmpty(Model?.Address) ? "is-filled" : "")">
                         <label asp-for="Address" class="form-label"></label>
                         <input asp-for="Address" class="form-control" />
                         <span asp-validation-for="Address" class="text-danger"></span>
                     </div>
 
-                    <div class="input-group input-group-outline mb-3">
+                    <div class="input-group input-group-outline mb-3 @(!string.IsNullOrEmpty(Model?.Phone) ? "is-filled" : "")">
                         <label asp-for="Phone" class="form-label"></label>
                         <input asp-for="Phone" class="form-control" />
                         <span asp-validation-for="Phone" class="text-danger"></span>
                     </div>
 
-                    <div class="input-group input-group-outline mb-3">
+                    <div class="input-group input-group-outline mb-3 @(!string.IsNullOrEmpty(Model?.Email) ? "is-filled" : "")">
                         <label asp-for="Email" class="form-label"></label>
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>

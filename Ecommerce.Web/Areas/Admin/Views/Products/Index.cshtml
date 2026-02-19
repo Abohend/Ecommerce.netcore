@@ -10,20 +10,20 @@
 
 <div class="card my-4 mx-4">
     <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+        <div class="bg-gradient-success shadow-success border-radius-lg pt-4 pb-3">
             <h6 class="text-white text-capitalize ps-3">@ViewBag.CardTitle table</h6>
         </div>
     </div>
     <div class="card-body px-0 pb-2">
-        <div class="table-responsive p-5">
-            <table id ="table" class="table align-items-center mb-0 w-90">
+        <div class="table-responsive px-4">
+            <table id ="table" class="table align-items-center mb-0">
                 <thead>
                     <tr>
-                        <th >Name</th>
-                        <th >Description</th>
-                        <th class="text-start">Price</th>
-                        <th >Category</th>
-                        <th >Action</th>
+                        <th class="text-uppercase text-success text-s font-weight-bolder opacity-7">Name</th>
+                        <th class="text-uppercase text-success text-s font-weight-bolder opacity-7">Description</th>
+                        <th class="text-start text-uppercase text-success text-s font-weight-bolder opacity-7">Price</th>
+                        <th class="text-uppercase text-success text-s font-weight-bolder opacity-7">Category</th>
+                        <th class="text-uppercase text-success text-s font-weight-bolder opacity-7">Action</th>
                     </tr>
                 </thead>
             </table>
@@ -31,7 +31,7 @@
     </div>
 </div>
 
-<a asp-action="Create" class="mx-4 btn btn-primary">New</a>
+<a asp-action="Create" class="mx-4 btn btn-success">New</a>
 
 @section Scripts {
     <script src="~/js/product.js"></script>

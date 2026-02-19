@@ -37,7 +37,16 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult UpdateOrderDetails(Order order)
         {
-            _unitOfWork.Order.Update(order);
+            var dbOrder = _unitOfWork.Order.GetOne(o => o.Id == order.Id);
+            
+            // Update only the fields from the form
+            dbOrder!.UserName = order.UserName;
+            dbOrder.Phone = order.Phone;
+            dbOrder.City = order.City;
+            dbOrder.Address = order.Address;
+            dbOrder.Carrier = order.Carrier;
+            dbOrder.TrackingNumber = order.TrackingNumber;
+            
             _unitOfWork.Complete();
             return RedirectToAction("Details", new { id = order.Id });
         }
@@ -73,10 +82,15 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
                 return View("Details", dbOrder);
             }
 
-            order.OrderStatus = Status.Shipped;
-            order.ShippingDate = DateTime.Now;
+            // Retrieve the existing order from database to preserve all fields
+            var existingOrder = _unitOfWork.Order.GetOne(o => o.Id == order.Id);
+            
+            // Update only shipping-related fields
+            existingOrder!.OrderStatus = Status.Shipped;
+            existingOrder.ShippingDate = DateTime.Now;
+            existingOrder.Carrier = order.Carrier;
+            existingOrder.TrackingNumber = order.TrackingNumber;
 
-            _unitOfWork.Order.Update(order);
             _unitOfWork.Complete();
 
             return RedirectToAction("Details", new { id = order.Id });

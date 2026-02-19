@@ -4,7 +4,6 @@ using Ecommerce.Entities.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Utilities;
 
 namespace Ecommerce.Web.Areas.Admin.Controllers
@@ -23,11 +22,28 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
         {
             return View();
         }
-        public IActionResult GetAllData()
+        public async Task<IActionResult> GetAllData()
         {
-            var id = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            var users = _userManager.Users.Where(x => x.Id != id);
-            return Json(new {data = users});
+            var users = _userManager.Users.ToList();
+            var userList = new List<object>();
+            
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                var role = roles.FirstOrDefault() ?? "No Role";
+                
+                userList.Add(new
+                {
+                    id = user.Id,
+                    name = user.Name,
+                    email = user.Email,
+                    role,
+                    lockoutEnabled = user.LockoutEnabled,
+                    lockoutEnd = user.LockoutEnd
+                });
+            }
+            
+            return Json(new { data = userList });
         }
 
         [HttpPost]
@@ -42,6 +58,7 @@ namespace Ecommerce.Web.Areas.Admin.Controllers
                 }
                 else
                 {
+                    user.LockoutEnabled = true;
                     user.LockoutEnd = DateTime.Now.AddYears(1000);
                 }
                 await _userManager.UpdateAsync(user);
